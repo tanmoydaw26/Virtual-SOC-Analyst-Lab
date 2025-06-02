@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: soc_splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=changeme
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./configs/splunk:/opt/splunk/etc
+
+  thehive:
+    image: strangebee/thehive:latest
+    container_name: soc_thehive
+    ports:
+      - "9000:9000"
+
+  misp:
+    image: harvarditsecurity/misp:latest
+    container_name: soc_misp
+    ports:
+      - "8080:80"
+
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: soc_suricata
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./logs/suricata:/var/log/suricata
